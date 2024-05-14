@@ -14,4 +14,8 @@ class Car extends Model
     {
         return $this->belongsTo(Brand::class);
     }
+
+    protected $casts = [
+        'images' => 'json'
+    ];
 }

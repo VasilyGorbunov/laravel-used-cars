@@ -42,3 +42,22 @@ it('shows brand, model and year', function () {
             'Audi', 'A3', '2021'
         ]);
 });
+
+it('shows a list of images', function () {
+    $car = Car::factory()
+        ->for(Brand::factory()->state(['name' => 'Toyota']))
+        ->state([
+            'model' => 'Corolla',
+            'year' => '2017',
+            'images' => [
+                'image1.jpg',
+                'image2.jpg',
+                'image3.jpg'
+            ],
+        ])
+        ->create();
+
+    \Livewire\Livewire::test(CarList::class)
+        ->assertOk()
+        ->assertSeeText(['image1.jpg', 'image2.jpg', 'image3.jpg']);
+});

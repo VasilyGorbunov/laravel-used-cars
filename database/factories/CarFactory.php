@@ -19,6 +19,7 @@ class CarFactory extends Factory
         return [
             'model' => $this->faker->name(),
             'year' => $this->faker->year(),
+            'images' => $this->faker->shuffleArray
         ];
     }
 }

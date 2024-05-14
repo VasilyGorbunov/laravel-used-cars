@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('brand_id')->constrained('brands')->cascadeOnDelete();
             $table->string('model');
             $table->string('year');
+            $table->json('images');
             $table->timestamps();
         });
     }
