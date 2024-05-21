@@ -19,7 +19,8 @@ class CarFactory extends Factory
         return [
             'model' => $this->faker->word(),
             'year' => $this->faker->year(),
-            'images' => []
+            'images' => [],
+            'price' => $this->faker->numberBetween(5_000, 10_000),
         ];
     }
 }

@@ -50,14 +50,27 @@ it('shows a list of images', function () {
             'model' => 'Corolla',
             'year' => '2017',
             'images' => [
-                'image1.jpg',
-                'image2.jpg',
-                'image3.jpg'
+                'car1.jpg',
+                'car2.jpg',
+                'car3.jpg'
             ],
         ])
         ->create();
 
     \Livewire\Livewire::test(CarList::class)
         ->assertOk()
-        ->assertSeeText(['image1.jpg', 'image2.jpg', 'image3.jpg']);
+        ->assertSeeText(['car1.jpg', 'car2.jpg', 'car3.jpg']);
+});
+
+it('shows the formatted car price', function () {
+    Car::factory()
+        ->for(Brand::factory())
+        ->state([
+            'price' => 10_000
+        ])
+        ->create();
+
+    Livewire::test(CarList::class)
+        ->assertOk()
+        ->assertSeeText(Number::currency(10_000));
 });

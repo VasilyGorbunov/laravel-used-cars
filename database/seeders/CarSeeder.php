@@ -20,6 +20,7 @@ class CarSeeder extends Seeder
             ->state([
                 'model' => 'Corolla',
                 'year' => '2017',
+                'price' => 10_000,
                 'images' => [
                     'car1.jpg',
                     'car2.jpg',
