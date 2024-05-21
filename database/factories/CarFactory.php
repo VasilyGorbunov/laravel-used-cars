@@ -17,9 +17,9 @@ class CarFactory extends Factory
     public function definition(): array
     {
         return [
-            'model' => $this->faker->name(),
+            'model' => $this->faker->word(),
             'year' => $this->faker->year(),
-            'images' => $this->faker->shuffleArray
+            'images' => []
         ];
     }
 }
