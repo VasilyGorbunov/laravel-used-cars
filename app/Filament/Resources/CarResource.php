@@ -8,6 +8,7 @@ use App\Models\Car;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Support\RawJs;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -23,7 +24,34 @@ class CarResource extends Resource
     {
         return $form
             ->schema([
-                //
+                Forms\Components\Section::make('Car Details')
+                    ->columnSpan(1)
+                    ->schema([
+                        Forms\Components\Select::make('brand_id')
+                            ->relationship(name: 'brand', titleAttribute: 'name')
+                            ->searchable()
+                            ->preload()
+                            ->required(),
+                        Forms\Components\TextInput::make('model')
+                            ->required(),
+                        Forms\Components\TextInput::make('year')
+                            ->required(),
+                        Forms\Components\TextInput::make('price')
+                            ->prefix('$')
+                            ->mask(RawJs::make('$money($input)'))
+                            ->stripCharacters(',')
+                            ->numeric()
+                            ->required(),
+                    ]),
+                Forms\Components\Section::make('Car Images')
+                    ->hiddenLabel()
+                    ->columnSpan(1)
+                    ->collapsible()
+                    ->schema([
+                        Forms\Components\FileUpload::make('images')
+                            ->multiple()
+                            ->required(),
+                    ]),
             ]);
     }
 
@@ -31,13 +59,28 @@ class CarResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\ImageColumn::make('images')
+                    ->stacked()
+                    ->circular(),
+                Tables\Columns\TextColumn::make('brand.name')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('model')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('year')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('price')
+                    ->money()
+                    ->sortable(),
             ])
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

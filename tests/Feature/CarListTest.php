@@ -59,7 +59,7 @@ it('shows a list of images', function () {
 
     \Livewire\Livewire::test(CarList::class)
         ->assertOk()
-        ->assertSeeText(['car1.jpg', 'car2.jpg', 'car3.jpg']);
+        ->assertSee(['car1.jpg', 'car2.jpg', 'car3.jpg']);
 });
 
 it('shows the formatted car price', function () {
