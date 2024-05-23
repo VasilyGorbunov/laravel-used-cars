@@ -11,6 +11,7 @@ use Filament\Tables\Columns\Layout\View;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Collection;
 use Livewire\Component;
@@ -37,6 +38,12 @@ class CarList extends Component implements HasTable, HasForms
             ->recordClasses(['!ring-0 !shadow-none'])
             ->columns([
                 View::make('cars.table.row-content')
+            ])
+            ->filters([
+                SelectFilter::make('brand_id')
+                    ->relationship(name: 'brand', titleAttribute: 'name')
+                    ->searchable()
+                    ->preload(),
             ]);
     }
 

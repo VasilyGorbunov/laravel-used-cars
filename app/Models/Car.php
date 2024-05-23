@@ -16,8 +16,15 @@ class Car extends Model
 
     protected static function booted()
     {
-        static::deleting(function (Car $car) {
+        static::deleted(function (Car $car) {
             foreach ($car->images as $image) {
+                Storage::delete($image);
+            }
+        });
+
+        static::updating(function (Car $car) {
+            $imagesToDelete = array_diff($car->getOriginal('images'), $car->images);
+            foreach ($imagesToDelete as $image) {
                 Storage::delete($image);
             }
         });
