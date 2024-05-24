@@ -89,3 +89,18 @@ it('can filter posts by car brand', function () {
         ->assertCanSeeTableRecords($cars->where('brand_id', $brandId))
         ->assertCanNotSeeTableRecords($cars->where('brand_id', '!=', $brandId));
 });
+
+it('can filter posts by car model', function () {
+    $cars = Car::factory()
+        ->count(10)
+        ->for(Brand::factory())
+        ->create();
+
+    $model = $cars->first()->model;
+
+    Livewire::test(CarList::class)
+        ->assertCanSeeTableRecords($cars)
+        ->filterTable('model', $model)
+        ->assertCanSeeTableRecords($cars->where('model', 'LIKE', "%$model%" ))
+        ->assertCanNotSeeTableRecords($cars->where('model', 'NOT LIKE', "%$model%"));
+});

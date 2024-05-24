@@ -48,7 +48,7 @@
         </button>
 
         <div class="flex justify-center absolute -bottom-5 start-0 end-0 space-x-2">
-            <template x-for="(image, index) in images">
+            <template x-for="(image, index) in images" :key="index">
                 <span x-on:click="selected = index" x-bind:class="{'bg-slate-800 dark:bg-slate-600': index == selected}"
                       class="w-3 h-3 border border-slate-800 dark:border-slate-600 rounded-full cursor-pointer"></span>
             </template>
