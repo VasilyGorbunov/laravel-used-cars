@@ -16,6 +16,7 @@
     </style>
 
     @filamentStyles
+    @wireUiScripts
     @vite('resources/css/app.css')
 </head>
 
