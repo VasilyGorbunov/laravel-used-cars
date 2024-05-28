@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Storage;
+use Laravel\Scout\Searchable;
 
 class Car extends Model
 {
-    use HasFactory;
+    use HasFactory, Searchable;
 
     protected static $unguarded = true;
 
@@ -45,4 +46,19 @@ class Car extends Model
     protected $casts = [
         'images' => 'json'
     ];
+
+    public function searchableAs(): string
+    {
+        return 'cars_index';
+    }
+
+    public function toSearchableArray(): array
+    {
+        return [
+            'brand' => $this->brand,
+            'model' => $this->model,
+            'year' => $this->year,
+            'price' => $this->price,
+        ];
+    }
 }

@@ -45,9 +45,15 @@ class CarList extends Component implements HasTable, HasForms
             ])
             ->filters([
                 SelectFilter::make('brand_id')
+                    ->label('Brand')
                     ->relationship(name: 'brand', titleAttribute: 'name')
                     ->searchable()
-                    ->preload(),
+                    ->preload()
+                    ->query(function (Builder $query, array $data) {
+                        return $query->when($data['value'], function (Builder $query, $value) {
+                            $query->whereIn('id', Car::search($value)->keys());
+                        });
+                    }),
                 Filter::make('model')
                     ->form([
                         TextInput::make('model')
@@ -55,8 +61,24 @@ class CarList extends Component implements HasTable, HasForms
                     ])
                     ->query(function (Builder $query, array $data) {
                         return $query->when($data['model'], function (Builder $query, $model) {
-                            $query->where('model', 'LIKE', "%$model%");
+                            $query->whereIn('id', Car::search($model)->keys());
                         });
+                    }),
+                Filter::make('year')
+                    ->form([
+                        TextInput::make('yearFrom')
+                            ->label('From Year'),
+                        TextInput::make('yearTo')
+                            ->label('To Year'),
+                    ])
+                    ->query(function (Builder $query, array $data) {
+                        return $query
+                            ->when($data['yearFrom'], function (Builder $query, $yearFrom) {
+                                $query->where('year', '>=', $yearFrom);
+                            })
+                            ->when($data['yearTo'], function (Builder $query, $yearTo) {
+                                $query->where('year', '<=', $yearTo);
+                            });
                     }),
             ], layout: FiltersLayout::AboveContentCollapsible);
     }

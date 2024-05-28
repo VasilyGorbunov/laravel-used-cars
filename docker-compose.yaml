@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+  redis:
+    image: redis:latest
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis.data:/root/redis
+      #- /path/to/local/redis.conf:/usr/local/etc/redis/redis.conf
+    environment:
+      #- REDIS_PASSWORD=password
+      - REDIS_PORT=6379
+      - REDIS_DATABASES=16
+
+  meilisearch:
+    container_name: meilisearch
+    image: getmeili/meilisearch:v1.8
+    environment:
+      #- http_proxy
+      #- https_proxy
+      - MEILI_MASTER_KEY=${MEILISEARCH_KEY:-masterKey}
+      #- MEILI_NO_ANALYTICS=${MEILI_NO_ANALYTICS:-true}
+      #- MEILI_ENV=${MEILI_ENV:-development}
+      #- MEILI_LOG_LEVEL
+      #- MEILI_DB_PATH=${MEILI_DB_PATH:-./data.ms}
+    ports:
+      - ${MEILI_PORT:-7700}:7700
+    networks:
+      - meilisearch
+    volumes:
+      - ./data.ms:/data.ms
+    restart: unless-stopped
+
+networks:
+  meilisearch:
+    driver: bridge
