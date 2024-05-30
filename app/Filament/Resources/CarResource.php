@@ -49,7 +49,9 @@ class CarResource extends Resource
                     ->collapsible()
                     ->schema([
                         Forms\Components\FileUpload::make('images')
+                            ->hiddenLabel()
                             ->multiple()
+                            ->reorderable()
                             ->required(),
                     ]),
             ]);

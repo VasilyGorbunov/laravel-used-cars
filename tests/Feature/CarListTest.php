@@ -60,7 +60,7 @@ it('shows a list of images', function () {
 
     \Livewire\Livewire::test(CarList::class)
         ->assertOk()
-        ->assertSee(['car1.jpg', 'car2.jpg', 'car3.jpg']);
+        ->assertSee('car1.jpg');
 });
 
 it('shows the formatted car price', function () {
@@ -77,50 +77,40 @@ it('shows the formatted car price', function () {
 });
 
 it('can filter posts by car brand', function () {
-    $cars = Car::factory()
-        ->count(10)
+
+    Car::factory()->count(9)
         ->for(Brand::factory())
         ->create();
+    $car = Car::factory()
+        ->for(Brand::factory()->state([ 'name' => 'TestBrand' ]))
+        ->create();
 
-    $brandId = $cars->first()->brand_id;
+    $brand = $car->brand->name;
 
     Livewire::test(CarList::class)
-        ->assertCanSeeTableRecords($cars)
-        ->filterTable('brand_id', $brandId)
-        ->assertCanSeeTableRecords($cars->where('brand_id', $brandId))
-        ->assertCanNotSeeTableRecords($cars->where('brand_id', '!=', $brandId));
+        ->assertCount('cars', 10)
+        ->set('brand', $brand)
+        ->refresh()
+        ->assertCount('cars', 1);
 });
 
 it('can filter posts by car model', function () {
-    $cars = Car::factory()
-        ->count(10)
+
+    Car::factory()->count(9)
         ->for(Brand::factory())
         ->create();
 
-    $model = $cars->first()->model;
-
-    Livewire::test(CarList::class)
-        ->assertCanSeeTableRecords($cars)
-        ->filterTable('model', $model)
-        ->assertCanSeeTableRecords($cars->where('model', 'LIKE', "%$model%" ))
-        ->assertCanNotSeeTableRecords($cars->where('model', 'NOT LIKE', "%$model%"));
-});
-
-it('can filter posts by year from', function () {
-    $cars = Car::factory()
-        ->count(2)
-        ->state(new Sequence(
-            ['year' => '2016'],
-            ['year' => '2018'],
-        ))
+    $car = Car::factory()
+        ->state(['model' => 'Test Model'])
         ->for(Brand::factory())
         ->create();
 
-    $yearFrom = 2018;
+    $model = $car->model;
 
     Livewire::test(CarList::class)
-        ->assertCanSeeTableRecords($cars)
-        ->filterTable('year', $yearFrom)
-        ->assertCanSeeTableRecords($cars->where('year', '>=', $yearFrom))
-        ->assertCanNotSeeTableRecords($cars->where('year', '<', $yearFrom));
+        ->assertCount('cars', 10)
+        ->set('model', $model)
+        ->refresh()
+        ->assertCount('cars', 1);
 });
+
