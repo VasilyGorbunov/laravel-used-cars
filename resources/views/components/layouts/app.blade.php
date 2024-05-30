@@ -11,7 +11,7 @@
 
     <style>
         [x-cloak] {
-            display: none !important;
+            display: hidden !important;
         }
     </style>
 

@@ -13,4 +13,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', \App\Livewire\CarList::class);
+Route::get('/', \App\Livewire\CarList::class)->name('cars');
+Route::get('/{car}', \App\Livewire\CarDetails::class)->name('cars.show');
